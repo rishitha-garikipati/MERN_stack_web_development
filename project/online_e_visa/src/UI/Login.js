@@ -30,6 +30,9 @@ export default function Login() {
         height: '450px flex',
       }}
     >
+      <h1 align='center'>
+        ONLINE E VISA PORTAL
+      </h1>
       <Paper elevation={12} sx={{ width: '97%', height: '450px flex' }}>
         <Stack spacing={5} sx={{p:2}}>
           <Avatar
@@ -64,6 +67,9 @@ export default function Login() {
            
           <Typography variant="body2">
            if you are admin? <a href="/adminlogin">Admin Login</a>
+          </Typography>
+          <Typography variant="body2">
+           Forgot password? <a href="/forgotpassword">click here</a>
           </Typography>
         
   
