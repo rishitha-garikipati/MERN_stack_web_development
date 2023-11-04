@@ -13,7 +13,7 @@ export default function Login() {
 
   function onHandleClick() {
     if (username !== '' && password !== '') {
-      navigate('/Home');
+      navigate('/emailverification');
     } else {
       setShowAlert(false);
     }
