@@ -1,123 +1,94 @@
 import React, { useState } from 'react';
-import { TextField, Button, Typography, Alert, Avatar, Card, Paper, Stack } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import LoginIcon from '@mui/icons-material/Login';
-import axios from "axios";
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {
+  Button,
+  Card,
+  Stack,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+} from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import jkLogo from '../UI/logo.jpg';
 
-function Login() {
+const Login = () => {
   const navigate = useNavigate();
-  const [status, setStatus] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [showAlert, setShowAlert] = useState(true);
+  const [alert, setAlert] = useState(true);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function onHandleClick() {
     try {
-      const response = await axios.post("http://localhost:5000/api/login/token", {
-        username,
-        password,
+      const response = await axios.post('http://localhost:7000/api/login', {
+        username: username,
+        password: password,
       });
-      const token = response.data.token;
-      console.log(token);
-      localStorage.setItem("jwtToken", token);
-      setStatus(true); // Set status to indicate successful login
-      setShowAlert(true);
-      navigate('/dashboard'); // Navigate to Dashboard
+
+      if (response.status === 200) {
+        navigate('/emailverification');
+        toast.success('Login successful');
+      } else {
+        setAlert(false);
+        toast.error('Invalid credentials');
+      }
     } catch (error) {
-      setShowAlert(false); // Show the error alert
-      alert("Error logging in. Please try again.");
+      setAlert(false);
+      toast.error('Authentication Failed');
     }
   }
 
   return (
-    <div>
-      <Card
-        elevation={12}
-        style={{ marginLeft: '1000px', marginTop: '1rem' }}
-        sx={{
-          p: 3,
-          backgroundColor: '#EAD7BB',
-          width: '30%',
-          height: '350px flex',
-        }}
-      >
-        <h1 align='center'>
-          ONLINE E VISA PORTAL
-        </h1>
-        <Paper elevation={10} sx={{ width: '97%', height: '350px flex', backgroundColor: '#E4F1FF' }}>
-          <Stack spacing={5} sx={{ p: 2 }}>
-            <Avatar
-              style={{
-                backgroundImage: 'url("/src/avatar.jpeg")',
-                marginLeft: '175px',
-                marginTop: '55px',
-                height: '75px',
-                width: '75px',
-              }}
-              alt="vemy Sharp" src="/static/images/avatar/1.jpg"
-            >
-            </Avatar>
-            <TextField
-              label="Username"
-              required
-              fullWidth
-              color="primary"
-              onChange={(e) => {
-                setUsername(e.target.value);
-              }}
-            />
-            <TextField
-              type="password"
-              label="Password"
-              required
-              fullwidth
-              color="primary"
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-            />
-            <Button
-              endIcon={<LoginIcon />}
-              type="submit"
-              variant='contained'
-              onClick={handleSubmit}
-              sx={{ backgroundColor: 'green', color: 'white' }}
-            >
-              Login
+    <>
+      <ToastContainer />
+      <Stack sx={{ width: '450px', margin: '0 auto', marginTop: '50px' }}>
+        <Stack spacing={4}>
+          <Card elevation={4} sx={{ p: 4, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <img src={jkLogo} alt="jk logo" style={{ width: '200px', height: '127px', marginBottom: '20px' }} /> {/* Add the logo here */}
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <PersonIcon sx={{ fontSize: 20, marginRight: '8px' }} />
+                <TextField
+                  label="User name"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  sx={{ width: '100%' }}
+                />
+              </div>
+              <br></br>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <VpnKeyIcon sx={{ fontSize: 20, marginRight: '8px' }} />
+                <TextField
+                  type="password"
+                  label="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  sx={{ width: '100%' }}
+                />
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', width: '100%', marginTop: '20px' }}>
+              <FormControlLabel
+                control={<Checkbox checked={false} onChange={() => setAlert(!alert)} />}
+                label="Remember Me"
+              />
+              <p style={{ marginLeft: 'auto' }}>
+                <Link to="/forgetpassword">Forgot Password</Link>
+              </p>
+            </div>
+            <br></br>
+            <Button variant="contained" onClick={onHandleClick} sx={{ width: '100%' }}>
+              LOGIN
             </Button>
-            {status && (
-              <Alert severity="success" style={{ marginTop: '35px' }}>
-                OTP Verified Successfully!
-              </Alert>
-            )}
-
-            <Typography variant="body2">
-              Don't have an account? <a href="/register">Register here</a>
-            </Typography>
-
-            <Typography variant="body2">
-              If you are an admin? <a href="/adminlogin">Admin Login</a>
-            </Typography>
-
-            <Typography variant="body2">
-              Forgot your password? <a href="/forgetpassword">Click Here</a>
-            </Typography>
-
-            {!showAlert && (
-              <Alert
-                severity="error"
-                color="error"
-                onClose={() => setShowAlert(true)}
-              >
-                Invalid username or password
-              </Alert>
-            )}
-          </Stack>
-        </Paper>
-      </Card>
-    </div>
+            <p style={{ marginTop: '20px' }}>No Account? <Link to='/Register'>Sign Up Here!</Link></p>
+          </Card>
+        </Stack>
+      </Stack>
+    </>
   );
-}
+};
 
 export default Login;

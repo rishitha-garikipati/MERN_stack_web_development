@@ -1,132 +1,156 @@
-// UI/Register.js
-import React, { useState,useEffect } from 'react';
-import TextField from '@mui/material/TextField';
-import { Alert, Avatar, Button, Card, Paper, Stack,Typography } from '@mui/material';
+import React, { useState } from 'react';
+import {
+  Button,
+  Paper,
+  Stack,
+  TextField,
+} from '@mui/material';
+import jkLogo from '../UI/logo.jpg';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Axios from 'axios';
-import HowToRegIcon from '@mui/icons-material/HowToReg';
 
+const Register = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+    gmail: '',
+    phone_number: '',
+    dob: ''
+  });
+  const [alert, setAlert] = useState(false);
 
-export default function Register() {
-  const [status, setStatus] = useState(false);
-  const [data, setData] = useState([]);
-  const [Name, setName] = useState('');
-  const [newpassword, setNewPassword] = useState('');
-  const [age, setAge] = useState('');
-  const [mobile,setMobile] = useState('');
-  const [email,setEmail]=useState('');
-  const [showAlert, setShowAlert] = useState(true);
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
 
-  const onHandleClick = async (event) => {
-    event.preventDefault();
-    try {
-      await Axios.post('https://cute-plum-scarab-wrap.cyclic.app/api/register', {
-        Name:Name,
-        Email:email,
-        Password:newpassword,
-        Mobileno:mobile,
-        Age:age
-      });
-      setStatus(true);
-      toast.success('Registered successfully');
-    } catch (error) {
-      console.log('error sending data', error);
-      toast.error('Invalid registraion');
+  const validateEmail = (email) => {
+    const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+    return emailRegex.test(email);
+  };
+
+  const calculateAge = (dateOfBirth) => {
+    const dobDate = new Date(dateOfBirth);
+    const today = new Date();
+    const age = today.getFullYear() - dobDate.getFullYear();
+    const monthDiff = today.getMonth() - dobDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dobDate.getDate())) {
+      return age - 1;
+    }
+    return age;
+  };
+
+  const onHandleClick = async () => {
+    const { username, password, gmail, phone_number, dob } = formData;
+
+    if (
+      username.trim() !== '' &&
+      password.trim() !== '' &&
+      gmail.trim() !== '' &&
+      phone_number.trim() !== '' &&
+      dob.trim() !== '' &&
+      validateEmail(gmail) &&
+      password.length >= 8
+    ) {
+      const age = calculateAge(dob);
+      if (age >= 18) {
+        try {
+          const response = await axios.post('http://localhost:7000/api/register', {
+            username,
+            gmail,
+            password,
+            phone_number,
+            dob,
+          });
+
+          console.log('Registration successful:', response.data);
+
+          toast.success('Successfully registered. Redirecting to login...'); // Show success toast
+
+          setTimeout(() => {
+            navigate('/login');
+          }, 3000);
+        } catch (error) {
+          console.error('Error during registration:', error);
+          setAlert(true);
+          toast.error('Error during registration. Please try again.'); // Show error toast
+        }
+      } else {
+        setAlert(true);
+        toast.error('You must be at least 18 years old to register.'); // Show error toast
+      }
+    } else {
+      setAlert(true);
+      toast.error('Please fill in all fields correctly.'); // Show error toast
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await Axios.get('https://cute-plum-scarab-wrap.cyclic.app/api/register');
-        setData(response.data);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-    fetchData();
-  }, []);
-
+  const closeAlert = () => {
+    setAlert(false);
+  };
 
   return (
-    <div>
-      <ToastContainer/>
-    <Card
-      elevation={12}
-      style={{ marginLeft: '1000px', marginTop: '1rem' }}
-      sx={{
-        p: 3,
-        backgroundColor: '#9EDDFF',
-        width: '30%',
-        height: '450px flex',
-      }}
-    >
-      <Paper elevation={12} sx={{ width: '97%', height: '450px flex' ,backgroundColor:'#E4F1FF'}}>
-        <Stack spacing={3} sx={{p:2}}>
-          <Avatar 
-            style={{
-              marginLeft: '175px',
-              marginTop: '55px',
-              height: '75px',
-              width: '75px',
-            }}
-          ></Avatar>
-          <TextField
-            label="Name" required fullWidth
-            color="primary"
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-          />
-          <TextField
-            label="Email" required fullWidth
-            color="primary"
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-          />
-          <TextField
-            type="password"
-            label="Enter Password" required fullWidth
-            color="primary"
-            onChange={(e) => {
-              setNewPassword(e.target.value);
-            }}
-          />
-          <TextField
-           type="mobile Number"
-           label="Mobile Number" required fullWidth
-           color="primary"
-           onChange={(e) => {
-            setMobile(e.target.value);
-           }}
-          />
-          <TextField
-            label="Age" required fullWidth
-            color="primary"
-            onChange={(e) => {
-              setAge(e.target.value);
-            }}
-          />
-          <Button variant="contained" onClick={onHandleClick} sx={{backgroundColor: 'green',color:'white'}}  endIcon={<HowToRegIcon />}>
-            Register
-          </Button>
-          <Typography variant="body2">
-            Already an User? <a href="/">Login here</a>
-          </Typography>
-          {!showAlert && (
-            <Alert
-              severity="error"
-              color="error" // Use "error" for the color
-              onClose={() => setShowAlert(true)}
-            >
-              Invalid username or password
-            </Alert>
-          )}
+    <>
+      <Paper elevation={20} sx={{ width: '27%', height: '590px', margin: '0 auto' }}>
+        <Stack spacing={2}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <img src={jkLogo} alt="jk logo" style={{ width: '200px', height: '127px' }} />
+            <TextField
+              label="User name"
+              value={formData.username}
+              onChange={handleFormChange}
+              name="username"
+              sx={{ width: '90%', mb: 2 }}
+            />
+            <TextField
+              label="Gmail"
+              value={formData.gmail}
+              onChange={handleFormChange}
+              name="gmail"
+              sx={{ width: '90%', mb: 2 }}
+            />
+            <TextField
+              type="password"
+              label="Password"
+              value={formData.password}
+              onChange={handleFormChange}
+              name="password"
+              sx={{ width: '90%', mb: 2 }}
+            />
+            <TextField
+              label="Phone Number"
+              value={formData.phone_number}
+              onChange={handleFormChange}
+              name="phone_number"
+              sx={{ width: '90%', mb: 2 }}
+            />
+            <TextField
+              type="date"
+              label="Date of Birth"
+              value={formData.dob}
+              onChange={handleFormChange}
+              name="dob"
+              InputLabelProps={{ shrink: true }}
+              sx={{ width: '90%', mb: 2 }}
+            />
+            <Button variant="contained" onClick={onHandleClick} sx={{ width: '90%', mb: 2 }}>
+              REGISTER
+            </Button>
+            <p sx={{ mb: 2 }}>
+              Already a user? <Link to="/login">Login Here</Link>
+            </p>
+          </div>
         </Stack>
       </Paper>
-    </Card>
-    </div>
+      <ToastContainer position="top-center" autoClose={3000} hideProgressBar />
+    </>
   );
-}
+};
+
+export default Register;

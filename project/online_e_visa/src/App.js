@@ -12,8 +12,8 @@ import Contact from './UI/Contact';
 import EmailSend from './UI/emailverification';
 import Forgetpassword from './UI/Forgetpassword';
 import Bot from './UI/Bot';
+import Aboutus from './UI/About';
 import FAQComponent from './UI/faq';
-
 
 
 export default function App() {
@@ -32,6 +32,7 @@ export default function App() {
         <Route path='/emailverification' element={<EmailSend/>}></Route>
         <Route path='/forgetpassword' element={<Forgetpassword/>  }></Route>
         <Route path='/bot' element={<Bot/>  }></Route>
+        <Route path='/about' element={<Aboutus/>  }></Route>
         <Route path='/faq' element={<FAQComponent/>  }></Route>
       </Routes>
     </BrowserRouter>

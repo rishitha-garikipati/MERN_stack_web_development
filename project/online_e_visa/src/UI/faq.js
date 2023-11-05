@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, Typography, Stack } from '@mui/material';
+import Navbar from './Navbar';
 
 // Define your FAQs as an array of objects
 const faqsData = [
@@ -38,6 +39,7 @@ function FAQComponent() {
 
   return (
     <div>
+        <Navbar/>
       <Stack spacing={2}>
         <h1>Frequently Asked Questions</h1>
         {faqsData.map((faq, index) => (
