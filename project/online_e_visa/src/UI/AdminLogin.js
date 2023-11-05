@@ -1,7 +1,6 @@
-// UI/Login.js
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
-import { Alert, Avatar, Button, Card, Paper, Stack ,Typography} from '@mui/material';
+import { Alert, Avatar, Button, Card, Paper, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import LoginIcon from '@mui/icons-material/Login';
 
@@ -20,28 +19,23 @@ export default function Login() {
   }
 
   return (
-    <Card
-      elevation={12}
-      style={{ marginLeft: '1000px', marginTop: '1rem' }}
-      sx={{
-        p: 3,
-        backgroundColor: '#9EDDFF',
-        width: '30%',
-        height: '450px flex',
-      }}
-    >
-      <Paper elevation={12} sx={{ width: '97%', height: '450px flex' }}>
-        <Stack spacing={5} sx={{p:2}}>
+    <Card elevation={12} style={{ margin: '1rem auto', maxWidth: '400px', padding: '2rem' }}>
+      <Paper elevation={12} style={{ backgroundColor: '#E4F1FF', padding: '2rem', borderRadius: '15px' }}>
+        <Stack spacing={3}>
           <Avatar
             style={{
-              marginLeft: '175px',
-              marginTop: '55px',
+              margin: '0 auto',
               height: '75px',
               width: '75px',
+              backgroundColor: '#007BFF',
             }}
-          ></Avatar>
+          >
+            <LoginIcon />
+          </Avatar>
           <TextField
-            label="Username" required fullWidth
+            label="Username"
+            required
+            fullWidth
             color="primary"
             onChange={(e) => {
               setUsername(e.target.value);
@@ -49,24 +43,23 @@ export default function Login() {
           />
           <TextField
             type="password"
-            label="Password"  required fullwidth
+            label="Password"
+            required
+            fullWidth
             color="primary"
             onChange={(e) => {
               setPassword(e.target.value);
             }}
           />
-          <Button   endIcon={<LoginIcon />} type="submit"  variant='contained' onClick={onHandleClick}>
+          <Button endIcon={<LoginIcon />} type="submit" variant="contained" onClick={onHandleClick} fullWidth sx={{backgroundColor: 'green',color:'white'}}>
             Login
           </Button>
-  
-
+          <Typography variant="body2" align="center">
+            Forget Password? <a href="/forgetpassword">Click Here</a>
+          </Typography>
 
           {!showAlert && (
-            <Alert
-              severity="error"
-              color="error"
-              onClose={() => setShowAlert(true)}
-            >
+            <Alert severity="error" color="error" onClose={() => setShowAlert(true)}>
               Invalid username or password
             </Alert>
           )}

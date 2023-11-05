@@ -5,7 +5,7 @@ const cors = require('cors');
 const clientroute = require('./Routers/Clientroute');
 const mailrouter = require('./Routers/mailrouter');
 const RegisterRoute = require('./Routers/RegisterRoute');
-
+const HrRouter = require('./Routers/HrRouter');
 
 //express , body parser & cors
 const app = express();
@@ -26,7 +26,7 @@ db.on('error',console.error.bind(console,'MongoDB conection error:'));
 app.use('/api/client',clientroute)
 app.use('/api/emailotp',mailrouter)
 app.use('/api/register',RegisterRoute)
-
+app.use('/api/hr',HrRouter)
 
 //start the server
 app.listen(7000,()=>{

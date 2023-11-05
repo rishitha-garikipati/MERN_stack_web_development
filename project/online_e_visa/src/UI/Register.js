@@ -1,12 +1,16 @@
 // UI/Register.js
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import { Alert, Avatar, Button, Card, Paper, Stack,Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Axios from 'axios';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
 
 
 export default function Register() {
-  const navigate = useNavigate();
+  const [status, setStatus] = useState(false);
+  const [data, setData] = useState([]);
   const [Name, setName] = useState('');
   const [newpassword, setNewPassword] = useState('');
   const [age, setAge] = useState('');
@@ -14,17 +18,40 @@ export default function Register() {
   const [email,setEmail]=useState('');
   const [showAlert, setShowAlert] = useState(true);
 
-  function onHandleClick() {
-    if (Name === 'vamshi' || newpassword === 'vamshi@130' || age === '19' || mobile === '8639243604' || email === 'venkatasaivamshi23@gmail.com') {
-      setShowAlert(true);   
-      navigate('/Login')
-    } else {
-      setShowAlert(false);   
-
+  const onHandleClick = async (event) => {
+    event.preventDefault();
+    try {
+      await Axios.post('https://cute-plum-scarab-wrap.cyclic.app/api/register', {
+        Name:Name,
+        Email:email,
+        Password:newpassword,
+        Mobileno:mobile,
+        Age:age
+      });
+      setStatus(true);
+      toast.success('Registered successfully');
+    } catch (error) {
+      console.log('error sending data', error);
+      toast.error('Invalid registraion');
     }
-  }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await Axios.get('https://cute-plum-scarab-wrap.cyclic.app/api/register');
+        setData(response.data);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchData();
+  }, []);
+
 
   return (
+    <div>
+      <ToastContainer/>
     <Card
       elevation={12}
       style={{ marginLeft: '1000px', marginTop: '1rem' }}
@@ -35,7 +62,7 @@ export default function Register() {
         height: '450px flex',
       }}
     >
-      <Paper elevation={12} sx={{ width: '97%', height: '450px flex' }}>
+      <Paper elevation={12} sx={{ width: '97%', height: '450px flex' ,backgroundColor:'#E4F1FF'}}>
         <Stack spacing={3} sx={{p:2}}>
           <Avatar 
             style={{
@@ -82,7 +109,7 @@ export default function Register() {
               setAge(e.target.value);
             }}
           />
-          <Button variant="contained" onClick={onHandleClick}>
+          <Button variant="contained" onClick={onHandleClick} sx={{backgroundColor: 'green',color:'white'}}  endIcon={<HowToRegIcon />}>
             Register
           </Button>
           <Typography variant="body2">
@@ -100,5 +127,6 @@ export default function Register() {
         </Stack>
       </Paper>
     </Card>
+    </div>
   );
 }

@@ -4,19 +4,19 @@ import { Stack, Paper, Grid, Typography, Card, CardContent, Divider } from '@mui
 
 const contacts = [
   {
-    role: 'Developer',
+    role: 'Middleware Devloper',
     name: 'M Venkata Sai Vamshi',
     number: '8639243604',
     email: 'vsv8639243604@gmail.com',
   },
   {
-    role: 'Tester',
+    role: 'Frontend Devloper',
     name: 'G Rishitha',
     number: '9701670129',
     email: 'Rishitha.Garikipati@gmail.com',
   },
   {
-    role: 'Bugs Identifier',
+    role: 'Backend Devloper',
     name: 'Sravan Kumar',
     number: '7029757938',
     email: 'SravanKumar@gmail.com',
