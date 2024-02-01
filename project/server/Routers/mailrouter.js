@@ -24,7 +24,7 @@ router.post('/', async (req,res)=>{
     otpStore=otp;
     console.log(otp);
     const mailOption = {
-        from: "vsv8639243604@gmail.com",
+        from: "rishitha.garikipati@gmail.com",
         to: email,
         subject: "E-VISA OTP Verification",
         text: `this is your OTP:${otp} for your Login purpose`,
