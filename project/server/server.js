@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 //connection establish between node.js to mongodb
-const MONOGO_URI = 'mongodb+srv://vamshi:vamshi130@cluster0.2ym13iu.mongodb.net/?retryWrites=true&w=majority';
+const MONOGO_URI = 'mongodb+srv://rishitha:Mongodb7723$*@cluster0.wcwvalk.mongodb.net/?retryWrites=true&w=majority';
 mongoose.connect(MONOGO_URI,{
     useNewUrlParser:true,
     useUnifiedTopology:true
